@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SaaS Inspiration Hub</title>
+  <link rel="stylesheet" href="newtab.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="nickname-section">
+      <input type="text" id="nicknameInput" placeholder="Enter your nickname" />
+      <button id="saveNickname">Save</button>
+    </div>
+    <div class="welcome-section">
+      <H3 id="welcomeMessage">Welcome, SaaS Founder!</H3>
+    </div>    
+    <div class="content">
+      <!-- Column 1: Journaling Section -->
+      <div class="column journaling-column">
+        <div class="journaling-section">
+          <h2>Daily Journaling Prompt</h2>
+          <div id="journal-prompt">"Loading prompt..."</div>
+          <div id="journal-entry-container">
+            <div id="journal-entry-input" class="journal-entry" contenteditable="true">Click to start typing your journal...</div>
+            <button id="saveJournalEntry" style="display: none;">Save</button>
+          </div>
+        </div> 
+        <div class="journal-history">
+          <h2>Journal History</h2>
+          <div id="journal-history-container">No entries yet.</div>
+        </div>
+      </div>
+
+      <!-- Column 2: Product Hunt Section -->
+      <div class="column product-hunt-column">
+        <h2>This Week's Product Hunt Launches</h2>
+        <div id="product-hunt">Loading launches...</div>
+      </div>
+
+      <!-- Column 3: SaaS News Section -->
+      <div class="column news-column">
+        <h2>SaaS Startup News</h2>
+        <div id="news">Loading news...</div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="newtab.js"></script>
+</body>
+</html>

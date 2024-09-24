@@ -1,0 +1,232 @@
+body {
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #f4f4f4;
+  background-color: #121212;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100vh;
+}
+
+h1, h2, h3 {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+h2 {
+  margin-top: 0;
+}
+
+p {
+  margin: 1em 0;
+  color: #bbbbbb;
+}
+
+.container {
+  width: 90%;
+  max-width: 1400px;
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nickname-section {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.nickname-section input {
+  padding: 10px;
+  width: 60%;
+  margin-right: 10px;
+  border: 1px solid #444;
+  border-radius: 5px;
+  background-color: #333;
+  color: #f4f4f4;
+}
+
+.nickname-section button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #0073e6;
+  color: #ffffff;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.nickname-section button:hover {
+  background-color: #005bb5;
+}
+
+.welcome-section {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.quote-container {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 20px;
+  background-color: #2a2a2a;
+  border-radius: 10px;
+  border: 1px solid #444;
+}
+
+#quote {
+  font-size: 24px;
+  font-style: italic;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+#author {
+  font-size: 18px;
+  color: #cccccc;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 20px;
+}
+
+.column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.journaling-column {
+  background-color: #2a2a2a; /* Add background to the journaling column */
+  border: 1px solid #444;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1; /* Take equal space */
+  max-width: 32%; /* Consistent with other columns */
+}
+
+.journal-entry {
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #333;
+  border: 1px solid #444;
+  border-radius: 5px;
+  min-height: 50px;
+  color: #f4f4f4;
+}
+
+.journal-entry[contenteditable="true"]:empty:before {
+  content: attr(data-placeholder);
+  color: #777;
+}
+
+.journal-history {
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 10px;
+  padding: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.product-hunt-column, .news-column {
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 32%; /* Ensures equal width for all columns */
+}
+
+.product-item, .news-item {
+  display: flex;
+  background-color: #333;
+  border: 1px solid #444;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  padding: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.product-item:hover, .news-item:hover {
+  background-color: #3a3a3a;
+}
+
+.product-item img, .news-item img {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  margin-right: 15px;
+}
+
+.product-item h3, .news-item h3 {
+  font-size: 18px;
+  margin: 0 0 5px;
+  color: #ffffff;
+}
+
+.product-item p, .news-item p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #cccccc;
+}
+
+.product-item a, .news-item a {
+  color: #0073e6;
+  text-decoration: none;
+}
+
+.news-item small {
+  color: #888;
+}
+
+.edit-icon {
+  cursor: pointer;
+  margin-left: 10px;
+  color: #0073e6;
+  font-size: 16px;
+}
+
+.edit-icon:hover {
+  color: #005bb5;
+}
+
+.journal-edit-input {
+  width: 100%;
+  height: 100px; /* Increase height for a bigger textarea */
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #444;
+  background-color: #333;
+  color: #f4f4f4;
+  font-size: 16px;
+  resize: none; /* Prevent resizing */
+}
+
+.save-edit-button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #0073e6;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.save-edit-button:hover {
+  background-color: #005bb5;
+}
