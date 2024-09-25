@@ -46,7 +46,7 @@ This project is licensed under the MIT License.
 ## Get Started
 Add our extension to Chrome today and transform your browsing experience. Stay inspired, stay informed, and innovate with our Chrome New Tab extension!
 
-## FAQs for the Chrome New Tab Extension
+## FAQs
 
 **1. How do I install the extension?**
 You can install the extension by visiting the Chrome Web Store, search for "SaaS inspiration hub" and clicking on the “Add to Chrome” button. Once added, the extension will automatically open in your new tab. You can also open it directly by going to https://chromewebstore.google.com/detail/saas-inspiration-hub-a-ne/agphhkieiohhocaidlihglomljmfagak?authuser=8&hl=en
@@ -69,7 +69,7 @@ The SaaS news and motivational quotes are updated every 4 hours. Product Hunt la
 **7. Is the extension free to use?**
 Yes, the extension is completely free to use. We may introduce premium features in the future, but the core functionalities will remain free.
 
-## Support for Chrome New Tab Extension
+## Support
 We’re here to help you make the most of our Chrome extension. Whether you have questions, need assistance, or want to share feedback, we’ve got you covered.
 
 For personalized support or specific queries, feel free to reach out to our support team. We aim to respond to all inquiries within 24 hours. Email us at [support@laksha.net](mailto:support@laksha.net).
@@ -80,6 +80,6 @@ We value your feedback! Feel free to let us know if you have any ideas or sugges
 ## Updates & Announcements
 Stay tuned for updates and new features. We are constantly working to enhance your experience and add value to your daily browsing.
 
-**Thank you for using our Chrome New Tab extension!**
+**Thank you for using our SaaS Inspiration Hub extension!**
 
 If you have any questions or feedback or need assistance, please contact us at [support@laksha.net](mailto:support@laksha.net). We’re here to help you get the most out of your experience.
