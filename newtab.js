@@ -523,6 +523,74 @@ function displayNews(articles) {
 document.getElementById('saveNickname').addEventListener('click', saveNickname);
 
 
+// Function to save journal entry and update history
+function saveJournalEntry(entry) {
+  const today = new Date().toDateString();
+
+  chrome.storage.local.get(['journalPrompt', 'journalHistory'], function(result) {
+    const currentPrompt = result.journalPrompt || '';
+    const history = result.journalHistory || {};
+
+    // Save both the prompt and the entry text
+    history[today] = {
+      prompt: currentPrompt,
+      entry: entry
+    };
+
+    chrome.storage.local.set({ journalHistory: history }, function() {
+      updateJournalHistory(history);
+    });
+  });
+}
+
+
+// Function to update journal history with edit icon at the beginning and sorted by latest date
+function updateJournalHistory(history) {
+  const historyContainer = document.getElementById('journal-history-container');
+  historyContainer.innerHTML = '';
+
+  // Convert date keys to an array and sort in descending order
+  const sortedDates = Object.keys(history).sort((a, b) => new Date(b) - new Date(a));
+
+  // Iterate through sorted dates to display the history entries
+  sortedDates.forEach(date => {
+    // Create a div for the entry wrapper
+    const entryWrapper = document.createElement('div');
+    entryWrapper.classList.add('journal-entry-wrapper'); // Add a class for styling if needed
+    entryWrapper.style.marginBottom = '10px'; // Adds a gap between entries
+
+    // Add edit icon at the beginning
+    const editIcon = document.createElement('span');
+    editIcon.innerHTML = '✏️';
+    editIcon.classList.add('edit-icon');
+    editIcon.addEventListener('click', () => editJournalEntry(date, entryWrapper));
+
+    // Extract the prompt and entry from the history object
+    const { prompt, entry } = history[date];
+
+    // Create a text node with the prompt and entry text, and append without line breaks
+    const entryText = document.createTextNode(`${date} - Prompt: "${prompt}" - Response: ${entry}`);
+
+    // Append edit icon and entry text in one line
+    entryWrapper.appendChild(editIcon); // Append the edit icon first
+    entryWrapper.appendChild(document.createTextNode(' ')); // Add a space between the icon and text
+    entryWrapper.appendChild(entryText); // Append the entry text
+
+    historyContainer.appendChild(entryWrapper);
+  });
+}
+
+
+
+
+
+
+
+
+
+
+
+
 // Function to handle journal entry
 function handleJournalEntry() {
   const journalEntryInput = document.getElementById('journal-entry-input');
@@ -563,21 +631,6 @@ function handleJournalEntry() {
   });
 }
 
-// Function to save journal entry and update history
-function saveJournalEntry(entry) {
-  const today = new Date().toDateString();
-
-  chrome.storage.local.get(['journalHistory'], function (result) {
-    const history = result.journalHistory || {};
-    history[today] = entry;
-
-    chrome.storage.local.set({ journalHistory: history }, function () {
-      updateJournalHistory(history);
-    });
-  });
-}
-
-
 
 // Function to load journal entry and history on page load
 function loadJournalEntry() {
@@ -587,20 +640,26 @@ function loadJournalEntry() {
     const history = result.journalHistory || {};
 
     if (history[today]) {
-      document.getElementById('journal-entry-input').innerText = history[today];
+      const { prompt, entry } = history[today]; // Destructure to get prompt and entry
+      document.getElementById('journal-prompt').innerText = `"${prompt}"`; // Display the prompt
+      document.getElementById('journal-entry-input').innerText = entry; // Display the entry text
       document.getElementById('journal-entry-input').classList.add('saved');
     }
-    updateJournalHistory(history);
+
+    updateJournalHistory(history); // Update the history section
   });
 }
 
 
 
 // Function to save the edited journal entry
-function saveJournalEntryEdit(date, updatedText) {
+function saveJournalEntryEdit(date, updatedPrompt, updatedText) {
   chrome.storage.local.get(['journalHistory'], function (result) {
     const history = result.journalHistory || {};
-    history[date] = updatedText;
+    history[date] = {
+      prompt: updatedPrompt,
+      entry: updatedText
+    };
 
     chrome.storage.local.set({ journalHistory: history }, function () {
       updateJournalHistory(history); // Update the history view
@@ -608,75 +667,56 @@ function saveJournalEntryEdit(date, updatedText) {
   });
 }
 
+
+
 // Function to handle editing of a journal entry
 function editJournalEntry(date, entryDiv) {
-  // Extract only the entry text, removing the date part
-  const entryText = entryDiv.textContent.split(': ')[1] || '';
-  
-  // Create an input field for editing
-  const inputField = document.createElement('textarea');
-  inputField.value = entryText;
-  inputField.classList.add('journal-edit-input');
-  entryDiv.replaceWith(inputField);
+  // Extract prompt and entry text from the entryDiv text content
+  const entryParts = entryDiv.textContent.split(' - Prompt: "')[1].split('" - Response: ');
+  const promptText = entryParts[0] || '';
+  const entryText = entryParts[1] || '';
+
+  // Create input fields for editing the prompt and entry
+  const promptInputField = document.createElement('textarea');
+  promptInputField.value = promptText;
+  promptInputField.classList.add('journal-edit-input');
+  promptInputField.placeholder = 'Edit your prompt here...';
+
+  const entryInputField = document.createElement('textarea');
+  entryInputField.value = entryText;
+  entryInputField.classList.add('journal-edit-input');
+  entryInputField.placeholder = 'Edit your response here...';
 
   // Create a save button
   const saveButton = document.createElement('button');
   saveButton.textContent = 'Save';
   saveButton.classList.add('save-edit-button');
-  inputField.insertAdjacentElement('afterend', saveButton);
+
+  // Replace entryDiv content with the input fields and save button
+  entryDiv.innerHTML = ''; // Clear current content
+  entryDiv.appendChild(promptInputField);
+  entryDiv.appendChild(entryInputField);
+  entryDiv.appendChild(saveButton);
 
   // Handle save button click
   saveButton.addEventListener('click', function () {
-    const updatedText = inputField.value.trim();
-    if (updatedText) {
-      // Save the entry
-      saveJournalEntryEdit(date, updatedText);
+    const updatedPrompt = promptInputField.value.trim();
+    const updatedEntry = entryInputField.value.trim();
 
-      // Hide save button and disable editing
-      saveButton.style.display = 'none';
-      inputField.replaceWith(entryDiv);
-      entryDiv.textContent = `${date}: ${updatedText}`; // Update text in entryDiv
+    if (updatedPrompt && updatedEntry) {
+      // Save the updated prompt and entry
+      saveJournalEntryEdit(date, updatedPrompt, updatedEntry);
+
+      // Restore original view
+      entryDiv.innerHTML = '';
+      entryDiv.textContent = `${date} - Prompt: "${updatedPrompt}" - Response: ${updatedEntry}`;
     }
   });
 
-  // Auto-focus and select the text in the textarea
-  inputField.focus();
-  inputField.select();
+  // Auto-focus and select the text in the entry input field
+  entryInputField.focus();
+  entryInputField.select();
 }
-
-// Function to update journal history with edit icon at the beginning and sorted by latest date
-function updateJournalHistory(history) {
-  const historyContainer = document.getElementById('journal-history-container');
-  historyContainer.innerHTML = '';
-
-  // Convert date keys to an array and sort in descending order
-  const sortedDates = Object.keys(history).sort((a, b) => new Date(b) - new Date(a));
-
-  // Iterate through sorted dates to display the history entries
-  sortedDates.forEach(date => {
-    // Create a div for the entry wrapper
-    const entryWrapper = document.createElement('div');
-    entryWrapper.classList.add('journal-entry-wrapper'); // Add a class for styling if needed
-    entryWrapper.style.marginBottom = '10px'; // Adds a gap between entries
-
-    // Add edit icon at the beginning
-    const editIcon = document.createElement('span');
-    editIcon.innerHTML = '✏️';
-    editIcon.classList.add('edit-icon');
-    editIcon.addEventListener('click', () => editJournalEntry(date, entryWrapper));
-
-    // Create a text node with date and entry text, and append without line breaks
-    const entryText = document.createTextNode(`${date}: ${history[date]}`);
-
-    // Append edit icon and entry text in one line
-    entryWrapper.appendChild(editIcon); // Append the edit icon first
-    entryWrapper.appendChild(document.createTextNode(' ')); // Add a space between the icon and text
-    entryWrapper.appendChild(entryText); // Append the entry text
-
-    historyContainer.appendChild(entryWrapper);
-  });
-}
-
 
 
 
@@ -693,4 +733,83 @@ document.addEventListener('DOMContentLoaded', function () {
   handleJournalEntry(); // Call this to handle the journal entry functionality
   loadJournalEntry(); // Call this to load journal entry and history on page load
   //displayJournalHistory(); // Load and display past journal entries on page load
+});
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const toggleButton = document.getElementById('dark-mode-toggle');
+  const currentTheme = localStorage.getItem('theme') || 'light';
+  
+  document.body.classList.add(currentTheme + '-mode');
+  toggleButton.classList.toggle('dark', currentTheme === 'dark');
+  
+  toggleButton.addEventListener('click', () => {
+    document.body.classList.toggle('light-mode');
+    document.body.classList.toggle('dark-mode');
+    
+    const theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+    localStorage.setItem('theme', theme);
+    
+    toggleButton.classList.toggle('dark', theme === 'dark');
+  });
+});
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const notesArea = document.getElementById('notes-area');
+  notesArea.value = localStorage.getItem('notes') || '';
+
+  notesArea.addEventListener('input', () => {
+    localStorage.setItem('notes', notesArea.value);
+  });
+});
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const bookmarkIcons = document.getElementById('bookmark-icons');
+  const bookmarkInputSection = document.querySelector('.bookmark-input');
+  const showInputsButton = document.getElementById('show-inputs');
+  const bookmarkList = JSON.parse(localStorage.getItem('bookmarks')) || [];
+
+  // Function to display icons as clickable links
+  function displayIcons() {
+    bookmarkIcons.innerHTML = bookmarkList.map((bookmark) => {
+      const faviconUrl = `https://www.google.com/s2/favicons?domain=${new URL(bookmark.url).hostname}`;
+      return `
+        <a href="${bookmark.url}" title="${bookmark.name}">
+          <img src="${faviconUrl}" alt="${bookmark.name}" />
+        </a>
+      `;
+    }).join('');
+
+    // Append the "+" button to the end of the icons
+    bookmarkIcons.appendChild(showInputsButton);
+  }
+
+  // Show input fields on "+" button click
+  showInputsButton.addEventListener('click', () => {
+    bookmarkInputSection.style.display = bookmarkInputSection.style.display === 'none' ? 'flex' : 'none';
+  });
+
+  document.getElementById('add-bookmark').addEventListener('click', () => {
+    const name = document.getElementById('bookmark-name').value;
+    const url = document.getElementById('bookmark-url').value;
+
+    if (name && url) {
+      bookmarkList.push({ name, url });
+      localStorage.setItem('bookmarks', JSON.stringify(bookmarkList));
+      displayIcons();
+
+      // Clear the input fields
+      document.getElementById('bookmark-name').value = '';
+      document.getElementById('bookmark-url').value = '';
+      
+      // Hide the input fields after adding
+      bookmarkInputSection.style.display = 'none';
+    }
+  });
+
+  // Initial display of icons
+  displayIcons();
 });

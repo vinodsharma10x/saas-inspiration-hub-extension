@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "SaaS inspiration hub - A New Tab Extension",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "SaaS inspiration hub! Start your day with motivational quotes, journal entries, top Product Hunt launches, and the latest SaaS news.",
     "chrome_url_overrides": {
       "newtab": "newtab.html"

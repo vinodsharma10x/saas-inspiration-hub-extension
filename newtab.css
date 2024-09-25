@@ -1,9 +1,10 @@
+
 body {
   font-family: 'Inter', Arial, sans-serif;
   font-size: 16px;
   line-height: 1.6;
   color: #f4f4f4;
-  background-color: #121212;
+
   margin: 0;
   padding: 0;
   display: flex;
@@ -12,9 +13,47 @@ body {
   height: 100vh;
 }
 
+body.light-mode {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+body.dark-mode {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+/* Styling for the Dark Mode Toggle Button */
+/* Position the toggle button at the top right */
+.toggle-button {
+  position: absolute; /* Position relative to the nearest positioned ancestor (e.g., body or container) */
+  top: 20px; /* Adjust as needed for vertical positioning */
+  right: 20px; /* Adjust as needed for horizontal positioning */
+  z-index: 1000; /* Ensure it stays on top of other elements */
+
+  background-color: #bdbfc1;
+  
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-button:hover {
+  background-color: #0056b3;
+}
+
+.toggle-button.dark {
+  background-color: #444444;
+  color: #dddddd;
+}
+
+
 h1, h2, h3 {
   font-weight: 600;
-  color: #ffffff;
+  
 }
 
 h2 {
@@ -23,13 +62,13 @@ h2 {
 
 p {
   margin: 1em 0;
-  color: #bbbbbb;
+  
 }
 
 .container {
   width: 90%;
   max-width: 1400px;
-  background-color: #1e1e1e;
+ 
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -41,7 +80,7 @@ p {
 .nickname-section {
   width: 100%;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 }
 
 .nickname-section input {
@@ -50,8 +89,7 @@ p {
   margin-right: 10px;
   border: 1px solid #444;
   border-radius: 5px;
-  background-color: #333;
-  color: #f4f4f4;
+  
 }
 
 .nickname-section button {
@@ -70,7 +108,7 @@ p {
 .welcome-section {
   width: 100%;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .quote-container {
@@ -78,7 +116,7 @@ p {
   text-align: center;
   margin-bottom: 20px;
   padding: 20px;
-  background-color: #2a2a2a;
+
   border-radius: 10px;
   border: 1px solid #444;
 }
@@ -86,13 +124,11 @@ p {
 #quote {
   font-size: 24px;
   font-style: italic;
-  color: #ffffff;
   margin-bottom: 10px;
 }
 
 #author {
-  font-size: 18px;
-  color: #cccccc;
+  font-size: 18px; 
 }
 
 .content {
@@ -109,7 +145,7 @@ p {
 }
 
 .journaling-column {
-  background-color: #2a2a2a; /* Add background to the journaling column */
+  
   border: 1px solid #444;
   border-radius: 10px;
   padding: 20px;
@@ -123,20 +159,20 @@ p {
 .journal-entry {
   padding: 10px;
   margin-top: 10px;
-  background-color: #333;
+  
   border: 1px solid #444;
   border-radius: 5px;
   min-height: 50px;
-  color: #f4f4f4;
+  
 }
 
 .journal-entry[contenteditable="true"]:empty:before {
   content: attr(data-placeholder);
-  color: #777;
+  
 }
 
 .journal-history {
-  background-color: #2a2a2a;
+ 
   border: 1px solid #444;
   border-radius: 10px;
   padding: 20px;
@@ -144,7 +180,7 @@ p {
 }
 
 .product-hunt-column, .news-column {
-  background-color: #2a2a2a;
+  
   border: 1px solid #444;
   border-radius: 10px;
   padding: 20px;
@@ -153,7 +189,7 @@ p {
 
 .product-item, .news-item {
   display: flex;
-  background-color: #333;
+  
   border: 1px solid #444;
   border-radius: 10px;
   margin-bottom: 15px;
@@ -175,13 +211,13 @@ p {
 .product-item h3, .news-item h3 {
   font-size: 18px;
   margin: 0 0 5px;
-  color: #ffffff;
+  
 }
 
 .product-item p, .news-item p {
   margin: 5px 0;
   font-size: 14px;
-  color: #cccccc;
+  
 }
 
 .product-item a, .news-item a {
@@ -190,18 +226,35 @@ p {
 }
 
 .news-item small {
-  color: #888;
+  
 }
 
-.edit-icon {
+/* Styling for Edit and Delete Icons */
+.edit-icon, .delete-icon {
   cursor: pointer;
   margin-left: 10px;
   color: #0073e6;
   font-size: 16px;
+  display: inline-block;
 }
 
-.edit-icon:hover {
+.edit-icon:hover, .delete-icon:hover {
   color: #005bb5;
+}
+
+/* Additional styling for better alignment */
+.bookmark-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 10px;
+}
+
+.bookmark-list a {
+  flex-grow: 1;
+  margin-right: 10px;
+  text-decoration: none;
+  color: #0073e6;
 }
 
 .journal-edit-input {
@@ -211,8 +264,7 @@ p {
   padding: 10px;
   border-radius: 5px;
   border: 1px solid #444;
-  background-color: #333;
-  color: #f4f4f4;
+  
   font-size: 16px;
   resize: none; /* Prevent resizing */
 }
@@ -230,3 +282,358 @@ p {
 .save-edit-button:hover {
   background-color: #005bb5;
 }
+
+/* Styling for Quick Links Section */
+#quick-links {
+  margin-top: 5px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #444;
+  border-radius: 10px;
+  padding: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.bookmark-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+#bookmark-name, #bookmark-url {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: calc(100% - 120px);
+}
+
+#add-bookmark {
+  padding: 8px 12px;
+  background-color: #28a745;
+  
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#add-bookmark:hover {
+  background-color: #218838;
+}
+
+.bookmark-list {
+  list-style: none;
+  padding: 0;
+}
+
+.bookmark-list li {
+  padding: 10px;
+  margin-bottom: 5px;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bookmark-list a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.bookmark-list button {
+  background: none;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.bookmark-list button:hover {
+  color: #c82333;
+}
+
+/* Styling for Notes Widget */
+#notes-widget {
+  margin-top: 20px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #444;
+  border-radius: 10px;
+  padding: 20px;
+  transition: background-color 0.3s ease;
+}
+
+#notes-area {
+  
+  font-size: 14px;
+  padding: 10px;
+  margin-top: 10px;
+  width: 90%;
+  border: 1px solid #444;
+  border-radius: 5px;
+  min-height: 50px;
+}
+
+
+#notes-area:focus {
+  border-color: #80bdff;
+  outline: none;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 5px rgba(128, 189, 255, 0.5);
+}
+
+
+/* Additional Light Mode Styles */
+
+/* Adjust header colors for light mode */
+body.light-mode h1, 
+body.light-mode h2, 
+body.light-mode h3 {
+  color: #333333; /* Darker text color */
+}
+
+/* Input fields for light mode */
+body.light-mode input[type="text"],
+body.light-mode input[type="url"],
+body.light-mode textarea {
+  background-color: #ffffff; /* White background */
+  color: #000000; /* Black text */
+  border: 1px solid #ccc; /* Light border */
+}
+
+/* Buttons for light mode */
+body.light-mode button {
+  background-color: #007bff; /* Primary blue */
+  color: #ffffff; /* White text */
+  border: none; /* No border */
+}
+
+body.light-mode button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Quote container for light mode */
+body.light-mode .quote-container,
+body.light-mode .journal-history {
+  background-color: #ffffff; /* White background */
+  color: #000000; /* Black text */
+  border: 1px solid #ddd; /* Light border */
+}
+
+/* Styling for journaling prompt */
+body.light-mode .journaling-column .journal-prompt {
+  background-color: #f9f9f9; /* Light grey background */
+  color: #333333; /* Darker text color */
+  border: 1px solid #ddd; /* Light border */
+  padding: 15px;
+  border-radius: 5px;
+}
+
+/* Product and News Items in light mode */
+body.light-mode .product-item,
+body.light-mode .news-item {
+  background-color: #ffffff; /* White background */
+  color: #333333; /* Darker text */
+  border: 1px solid #ccc; /* Light border */
+}
+
+body.light-mode .product-item:hover,
+body.light-mode .news-item:hover {
+  background-color: #f1f1f1; /* Slightly darker grey on hover */
+}
+
+/* Links in product and news items */
+body.light-mode .product-item a,
+body.light-mode .news-item a {
+  color: #007bff; /* Primary link color */
+}
+
+/* Adjust general containers for light mode */
+body.light-mode .content {
+  background-color: #f9f9f9; /* Light grey background for main content */
+}
+
+body.light-mode .container {
+  border: 1px solid #ddd; /* Light border for containers */
+}
+
+/* Adjustments for quick links */
+body.light-mode #quick-links,
+body.light-mode #notes-widget {
+  background-color: #ffffff; /* White background */
+  border: 1px solid #ddd; /* Light border */
+}
+
+body.light-mode .bookmark-list li {
+  background-color: #ffffff; /* White background */
+  border: 1px solid #ddd; /* Light border */
+}
+
+/* Welcome Section Styling */
+.welcome-section {
+  background-color: #1e1e1e; /* Default dark mode background */
+  color: #ffffff; /* Default dark mode text color */
+  padding: 15px;
+  text-align: center;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #444; /* Dark mode border */
+}
+
+body.light-mode .welcome-section {
+  background-color: #f5f5f5; /* Light grey background for light mode */
+  color: #333333; /* Dark text color for light mode */
+  border: 1px solid #ddd; /* Light mode border */
+}
+
+body.light-mode .welcome-section h1, 
+body.light-mode .welcome-section p {
+  color: #333333; /* Ensure headers and text are visible in light mode */
+}
+
+
+/* Daily Journaling Prompt Section */
+.daily-journaling-prompt {
+  background-color: #2a2a2a; /* Default dark mode background */
+  color: #ffffff; /* Default dark mode text color */
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  border: 1px solid #444; /* Dark mode border */
+}
+
+.daily-journaling-prompt h2 {
+  margin-top: 0;
+  font-size: 20px;
+  color: #ffffff; /* Dark mode header color */
+}
+
+.daily-journaling-prompt p {
+  font-size: 16px;
+  color: #bbbbbb; /* Slightly lighter color for text */
+}
+
+body.light-mode .daily-journaling-prompt {
+  background-color: #ffffff; /* White background for light mode */
+  color: #333333; /* Dark text color for light mode */
+  border: 1px solid #ddd; /* Light border */
+}
+
+body.light-mode .daily-journaling-prompt h2 {
+  color: #333333; /* Dark header color for light mode */
+}
+
+body.light-mode .daily-journaling-prompt p {
+  color: #666666; /* Darker text color for light mode */
+}
+
+/* Styling for the prompt text */
+.daily-journaling-prompt .prompt-text {
+  font-size: 18px;
+  font-style: italic;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  color: #f4f4f4; /* Lighter color for dark mode */
+}
+
+body.light-mode .daily-journaling-prompt .prompt-text {
+  color: #444444; /* Darker color for light mode */
+}
+
+/* Styling for the journal entry input area */
+.daily-journaling-prompt .journal-entry-input {
+  width: 100%;
+  padding: 15px;
+  border-radius: 5px;
+  background-color: #333333; /* Dark mode input background */
+  color: #ffffff; /* Dark mode input text */
+  border: 1px solid #555; /* Dark mode border */
+  margin-top: 10px;
+  resize: none; /* Prevent resizing */
+  min-height: 80px; /* Ensure a decent height for text area */
+}
+
+body.light-mode .daily-journaling-prompt .journal-entry-input {
+  background-color: #ffffff; /* White background for light mode */
+  color: #000000; /* Black text for light mode */
+  border: 1px solid #ccc; /* Light border */
+}
+
+/* Placeholder styling */
+.daily-journaling-prompt .journal-entry-input::placeholder {
+  color: #999999; /* Lighter placeholder text for dark mode */
+}
+
+body.light-mode .daily-journaling-prompt .journal-entry-input::placeholder {
+  color: #aaaaaa; /* Slightly darker placeholder text for light mode */
+}
+
+
+
+/* Quick Links Section */
+.quick-links-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 0; /* Remove any default margin above the quick links */
+  margin-bottom: 10px; /* Add spacing below the quick links */
+}
+
+.bookmark-icons {
+  display: flex;
+  justify-content: center;
+  gap: 15px; /* Space between icons */
+  flex-wrap: wrap;
+  align-items: center; /* Center vertically */
+}
+
+.bookmark-icons img {
+  width: 32px; /* Icon size */
+  height: 32px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.show-inputs-button {
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.show-inputs-button:hover {
+  background-color: #0056b3;
+}
+
+.bookmark-input {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  justify-content: center; /* Center the inputs */
+}
+
+.bookmark-input input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.bookmark-input button {
+  padding: 8px 12px;
+  background-color: #28a745;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.bookmark-input button:hover {
+  background-color: #218838;
+}
+
