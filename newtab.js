@@ -313,94 +313,7 @@ function displayRandomJournalPrompt() {
 }
 
 
-// Function to load and display Product Hunt launches
-function loadProductHuntLaunches() {
-  chrome.storage.local.get(['productHuntData', 'productHuntCacheTime'], function(result) {
-    const cacheTime = result.productHuntCacheTime || 0;
-    const currentTime = Date.now();
 
-    if (result.productHuntData && (currentTime - cacheTime < 2 * 60 * 60 * 1000)) {
-      displayProductHuntLaunches(result.productHuntData);
-    } else {
-      fetchProductHuntLaunches();
-    }
-  });
-}
-
-
-// Fetch Product Hunt launches from the API
-function fetchProductHuntLaunches() {
-  const apiKey = '-XJKPhHe0yzeKZhMCPfUBwfo6Mzlrjv6_vtNgxeMPFw'; // Replace with your Product Hunt API key
-  const url = 'https://api.producthunt.com/v2/api/graphql';
-  const query = `
-  {
-    posts(first: 5, postedAfter: "${new Date(new Date().setDate(new Date().getDate() - 7)).toISOString()}", order: VOTES) {
-      edges {
-        node {
-          id
-          name
-          description
-          tagline
-          votesCount
-          url
-          thumbnail {
-            url
-          }
-        }
-      }
-    }
-  }`;
-
-  fetch(url, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ query })
-  })
-    .then(response => response.json())
-    .then(data => {
-      if (data.data && data.data.posts.edges.length > 0) {
-        chrome.storage.local.set({
-          productHuntData: data.data.posts.edges,
-          productHuntCacheTime: Date.now()
-        });
-        displayProductHuntLaunches(data.data.posts.edges);
-      } else {
-        document.getElementById('product-hunt').innerText = 'No launches found.';
-      }
-    })
-    .catch(error => {
-      document.getElementById('product-hunt').innerText = 'Failed to load Product Hunt launches.';
-      console.error('Error fetching launches:', error);
-    });
-}
-
-// Function to display Product Hunt launches
-function displayProductHuntLaunches(posts) {
-  const productHuntContainer = document.getElementById('product-hunt');
-  productHuntContainer.innerHTML = '';
-
-  posts.forEach(post => {
-    const productItem = document.createElement('div');
-    productItem.classList.add('product-item');
-    productItem.innerHTML = `
-      <img src="${post.node.thumbnail.url}" alt="${post.node.name}" class="product-image">
-      <div>
-        <h3><a href="${post.node.url}" target="_blank">${post.node.name}</a></h3>
-        <p>${post.node.tagline}</p>
-        <p>${post.node.description}</p>
-      </div>
-      <div class="product-votes">
-        <div class="vote-box">
-          <span class="vote-count">${post.node.votesCount} Votes</span>
-        </div>
-      </div>
-    `;
-    productHuntContainer.appendChild(productItem);
-  });
-}
 
 
 function saveNickname() {
@@ -460,64 +373,6 @@ function loadNickname() {
   });
 }
 
-
-// Function to load SaaS news and use caching
-function loadSaaSNews() {
-  chrome.storage.local.get(['saasNewsData', 'saasNewsCacheTime'], function(result) {
-    const cacheTime = result.saasNewsCacheTime || 0;
-    const currentTime = Date.now();
-
-    if (result.saasNewsData && (currentTime - cacheTime < 4 * 60 * 60 * 1000)) {
-      displayNews(result.saasNewsData);
-    } else {
-      fetchSaaSNews();
-    }
-  });
-}
-
-// Fetch SaaS news from API
-function fetchSaaSNews() {
-  const apiKey = 'ad4f0ec2b8ba51751b6a3353b346b939'; // Replace with your Mediastack API key
-  const url = `http://api.mediastack.com/v1/news?access_key=${apiKey}&categories=business&keywords=saas&languages=en&limit=5`;
-
-  fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      if (data.data) {
-        chrome.storage.local.set({
-          saasNewsData: data.data,
-          saasNewsCacheTime: Date.now()
-        });
-        displayNews(data.data);
-      } else {
-        document.getElementById('news').innerText = 'No news found.';
-      }
-    })
-    .catch(error => {
-      document.getElementById('news').innerText = 'Failed to load news.';
-      console.error('Error fetching news:', error);
-    });
-}
-
-// Function to display SaaS news articles
-function displayNews(articles) {
-  const newsContainer = document.getElementById('news');
-  newsContainer.innerHTML = '';
-
-  articles.forEach(article => {
-    const newsItem = document.createElement('div');
-    newsItem.classList.add('news-item');
-    newsItem.innerHTML = `
-      ${article.image ? `<img src="${article.image}" alt="${article.title}" class="news-image">` : ''}
-      <div>
-        <h3><a href="${article.url}" target="_blank">${article.title}</a></h3>
-        <p>${article.description || 'No description available.'}</p>
-        <small>Published on: ${new Date(article.published_at).toLocaleDateString()}</small>
-      </div>
-    `;
-    newsContainer.appendChild(newsItem);
-  });
-}
 
 // Event listener for the save button
 document.getElementById('saveNickname').addEventListener('click', saveNickname);
@@ -724,15 +579,12 @@ function editJournalEntry(date, entryDiv) {
 
 // Initialize the page with random quote, SaaS news, Product Hunt launches, and nickname
 document.addEventListener('DOMContentLoaded', function () {
-  //displayRandomQuote();
-  loadSaaSNews();
-  loadProductHuntLaunches();
   loadNickname();
   displayRandomJournalPrompt();
   
   handleJournalEntry(); // Call this to handle the journal entry functionality
   loadJournalEntry(); // Call this to load journal entry and history on page load
-  //displayJournalHistory(); // Load and display past journal entries on page load
+
 });
 
 
@@ -812,4 +664,283 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initial display of icons
   displayIcons();
+});
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const filterIcon = document.getElementById('filter-icon');
+  const newsFilters = document.getElementById('news-filters');
+  const applyNewsFiltersButton = document.getElementById('apply-news-filters');
+  const newsContainer = document.getElementById('news');
+
+  // Show or hide filters section on icon click
+  filterIcon.addEventListener('click', () => {
+    newsFilters.style.display = newsFilters.style.display === 'none' ? 'block' : 'none';
+  });
+
+  // Function to fetch SaaS news based on user-selected filters
+  function fetchSaaSNews(categories, keywords) {
+    const apiKey = 'ad4f0ec2b8ba51751b6a3353b346b939'; // Replace with your Mediastack API key
+    const url = `http://api.mediastack.com/v1/news?access_key=${apiKey}&categories=${categories}&keywords=${keywords}&languages=en&limit=5`;
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        if (data.data) {
+          chrome.storage.local.set({
+            saasNewsData: data.data,
+            saasNewsCacheTime: Date.now()
+          });
+          displayNews(data.data);
+        } else {
+          newsContainer.innerText = 'No news found.';
+        }
+      })
+      .catch(error => {
+        newsContainer.innerText = 'Failed to load news.';
+        console.error('Error fetching news:', error);
+      });
+  }
+
+  // Apply filters and fetch news based on user input
+  applyNewsFiltersButton.addEventListener('click', () => {
+    const selectedCategories = Array.from(document.querySelectorAll('.checkbox-group input:checked'))
+      .map(checkbox => checkbox.value)
+      .join(',');
+
+    const keywords = document.getElementById('news-keywords').value.trim();
+
+    // Save user selections in local storage
+    chrome.storage.local.set({
+      selectedCategories: selectedCategories,
+      selectedKeywords: keywords
+    });
+
+    // Fetch news with selected filters
+    fetchSaaSNews(selectedCategories, keywords);
+
+    // Hide filters after applying
+    newsFilters.style.display = 'none';
+  });
+
+  // Load saved user selections and apply filters on page load
+  chrome.storage.local.get(['selectedCategories', 'selectedKeywords'], function(result) {
+    const savedCategories = result.selectedCategories || 'business'; // Default to 'business'
+    const savedKeywords = result.selectedKeywords || 'saas'; // Default to 'saas'
+
+    // Check the checkboxes based on saved categories
+    savedCategories.split(',').forEach(category => {
+      const checkbox = document.querySelector(`.checkbox-group input[value="${category}"]`);
+      if (checkbox) checkbox.checked = true;
+    });
+
+    // Set the keywords input value
+    document.getElementById('news-keywords').value = savedKeywords;
+
+    // Fetch news with saved filters
+    fetchSaaSNews(savedCategories, savedKeywords);
+  });
+});
+
+// Function to display SaaS news articles
+function displayNews(articles) {
+  const newsContainer = document.getElementById('news');
+  newsContainer.innerHTML = '';
+
+  articles.forEach(article => {
+    const newsItem = document.createElement('div');
+    newsItem.classList.add('news-item');
+    newsItem.innerHTML = `
+      ${article.image ? `<img src="${article.image}" alt="${article.title}" class="news-image">` : ''}
+      <div>
+        <h3><a href="${article.url}" target="_blank">${article.title}</a></h3>
+        <p>${article.description || 'No description available.'}</p>
+        <small>Published on: ${new Date(article.published_at).toLocaleDateString()}</small>
+      </div>
+    `;
+    newsContainer.appendChild(newsItem);
+  });
+}
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const filterIcon = document.getElementById('product-hunt-filter-icon');
+  const productHuntFilters = document.getElementById('product-hunt-filters');
+  const applyProductHuntFiltersButton = document.getElementById('apply-product-hunt-filters');
+  const productHuntContainer = document.getElementById('product-hunt');
+  const productHuntHeading = document.querySelector('.product-hunt-column h2');
+
+  // Show or hide filters section on icon click
+  filterIcon.addEventListener('click', () => {
+    productHuntFilters.style.display = productHuntFilters.style.display === 'none' ? 'block' : 'none';
+  });
+
+  // Function to fetch Product Hunt launches based on user-selected filters
+  function fetchProductHuntLaunches(timeFrame, upvoteThreshold, showMedia) {
+    const apiKey = '-XJKPhHe0yzeKZhMCPfUBwfo6Mzlrjv6_vtNgxeMPFw'; // Replace with your Product Hunt API key
+    const baseQuery = `{
+      posts(first: 10, order: VOTES`;
+
+    let dateFilter = '';
+    const today = new Date();
+    switch (timeFrame) {
+      case 'daily':
+        dateFilter = `, postedAfter: "${new Date(today.setDate(today.getDate() - 1)).toISOString()}"`;
+        break;
+      case 'weekly':
+        dateFilter = `, postedAfter: "${new Date(today.setDate(today.getDate() - 7)).toISOString()}"`;
+        break;
+      case 'monthly':
+        dateFilter = `, postedAfter: "${new Date(today.setMonth(today.getMonth() - 1)).toISOString()}"`;
+        break;
+      case 'yearly':
+        dateFilter = `, postedAfter: "${new Date(today.setFullYear(today.getFullYear() - 1)).toISOString()}"`;
+        break;
+      case 'all-time':
+      default:
+        dateFilter = '';
+        break;
+    }
+
+    const query = `${baseQuery}${dateFilter}) {
+      edges {
+        node {
+          id
+          name
+          description
+          tagline
+          votesCount
+          url
+          thumbnail {
+            url
+          }
+        }
+      }
+    }}`;
+
+    fetch('https://api.producthunt.com/v2/api/graphql', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ query })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.data && data.data.posts.edges.length > 0) {
+        const filteredPosts = data.data.posts.edges.filter(post => post.node.votesCount >= upvoteThreshold);
+        chrome.storage.local.set({
+          productHuntData: filteredPosts,
+          productHuntCacheTime: Date.now()
+        });
+        displayProductHuntLaunches(filteredPosts, showMedia);
+      } else {
+        productHuntContainer.innerText = 'No launches found.';
+      }
+    })
+    .catch(error => {
+      productHuntContainer.innerText = 'Failed to load Product Hunt launches.';
+      console.error('Error fetching launches:', error);
+    });
+  }
+
+  // Display Product Hunt launches based on user preferences
+  function displayProductHuntLaunches(posts, showMedia) {
+    productHuntContainer.innerHTML = '';
+
+    posts.forEach(post => {
+      const productItem = document.createElement('div');
+      productItem.classList.add('product-item');
+      productItem.innerHTML = `
+        ${showMedia && post.node.thumbnail.url ? `<img src="${post.node.thumbnail.url}" alt="${post.node.name}" class="product-image">` : ''}
+        <div>
+          <h3><a href="${post.node.url}" target="_blank">${post.node.name}</a></h3>
+          <p>${post.node.tagline}</p>
+          <p>${post.node.description}</p>
+        </div>
+        <div class="product-votes">
+          <div class="vote-box">
+            <span class="vote-count">${post.node.votesCount} Votes</span>
+          </div>
+        </div>
+      `;
+      productHuntContainer.appendChild(productItem);
+    });
+  }
+
+  // Function to update the Product Hunt heading based on the time frame
+  function updateProductHuntHeading(timeFrame) {
+    let headingText = "Product Hunt Launches";
+    switch (timeFrame) {
+      case 'daily':
+        headingText = "Today's Product Hunt Launches";
+        break;
+      case 'weekly':
+        headingText = "This Week's Product Hunt Launches";
+        break;
+      case 'monthly':
+        headingText = "This Month's Product Hunt Launches";
+        break;
+      case 'yearly':
+        headingText = "This Year's Product Hunt Launches";
+        break;
+      case 'all-time':
+        headingText = "All Time Product Hunt Launches";
+        break;
+    }
+
+    // Update the heading text and reattach the settings icon
+    productHuntHeading.innerHTML = `${headingText} <span id="product-hunt-filter-icon" class="filter-icon">⚙️</span>`;
+    
+    // Reattach the event listener for the newly inserted settings icon
+    document.getElementById('product-hunt-filter-icon').addEventListener('click', () => {
+      productHuntFilters.style.display = productHuntFilters.style.display === 'none' ? 'block' : 'none';
+    });
+  }
+
+  // Apply filters and fetch news based on user input
+  applyProductHuntFiltersButton.addEventListener('click', () => {
+    const timeFrame = document.getElementById('product-hunt-time-frame').value;
+    const upvoteThreshold = parseInt(document.getElementById('product-hunt-upvotes').value, 10) || 0;
+    const showMedia = document.getElementById('product-hunt-show-media').checked;
+
+    // Save user selections in local storage
+    chrome.storage.local.set({
+      selectedTimeFrame: timeFrame,
+      selectedUpvoteThreshold: upvoteThreshold,
+      selectedShowMedia: showMedia
+    });
+
+    // Update heading based on the selected time frame
+    updateProductHuntHeading(timeFrame);
+
+    // Fetch news with selected filters
+    fetchProductHuntLaunches(timeFrame, upvoteThreshold, showMedia);
+
+    // Hide filters after applying
+    productHuntFilters.style.display = 'none';
+  });
+
+  // Load saved user selections and apply filters on page load
+  chrome.storage.local.get(['selectedTimeFrame', 'selectedUpvoteThreshold', 'selectedShowMedia'], function(result) {
+    const savedTimeFrame = result.selectedTimeFrame || 'weekly';
+    const savedUpvoteThreshold = result.selectedUpvoteThreshold || 0;
+    const savedShowMedia = result.selectedShowMedia !== false;
+
+    // Set the time frame, upvote threshold, and media checkbox
+    document.getElementById('product-hunt-time-frame').value = savedTimeFrame;
+    document.getElementById('product-hunt-upvotes').value = savedUpvoteThreshold;
+    document.getElementById('product-hunt-show-media').checked = savedShowMedia;
+
+    // Update heading based on the saved time frame
+    updateProductHuntHeading(savedTimeFrame);
+
+    // Fetch news with saved filters
+    fetchProductHuntLaunches(savedTimeFrame, savedUpvoteThreshold, savedShowMedia);
+  });
 });

@@ -51,16 +51,60 @@
       </div>
 
       <!-- Column 2: Product Hunt Section -->
-      <div class="column product-hunt-column">
-        <h2>This Week's Product Hunt Launches</h2>
-        <div id="product-hunt">Loading launches...</div>
-      </div>
+      <!-- Product Hunt Section -->
+<div class="column product-hunt-column">
+  <h2>
+    This Week's Product Hunt Launches
+    <span id="product-hunt-filter-icon" class="filter-icon">⚙️</span> <!-- Filter Icon -->
+  </h2>
+  <!-- Hidden filter options, initially hidden -->
+  <div id="product-hunt-filters" class="product-hunt-filters" style="display: none;">
+    <h3>Select Time Frame</h3>
+    <select id="product-hunt-time-frame">
+      <option value="daily">Daily</option>
+      <option value="weekly" selected>This Week</option>
+      <option value="monthly">This Month</option>
+      <option value="yearly">This Year</option>
+      <option value="all-time">All Time</option>
+    </select>
+    <h3>Minimum Upvotes</h3>
+    <input type="number" id="product-hunt-upvotes" placeholder="Minimum upvotes" min="0" value="0">
+    <h3>Show Media Content</h3>
+    <input type="checkbox" id="product-hunt-show-media" checked> Show Images
+    <button id="apply-product-hunt-filters">Apply Filters</button>
+  </div>
+  <div id="product-hunt">Loading launches...</div>
+</div>
+
+
 
       <!-- Column 3: SaaS News Section -->
-      <div class="column news-column">
-        <h2>SaaS Startup News</h2>
-        <div id="news">Loading news...</div>
-      </div>
+<div class="column news-column">
+  <h2>
+    Trending News
+    <span id="filter-icon" class="filter-icon" title="Customize Your News">⚙️</span> <!-- Add settings icon for filter -->
+  </h2>
+  <!-- Hidden filter options, initially hidden -->
+  <div id="news-filters" class="news-filters" style="display: none;">
+    <h3>Select Categories</h3>
+    <div class="checkbox-group">
+      <label><input type="checkbox" value="general"> General</label>
+      <label><input type="checkbox" value="business"> Business</label>
+      <label><input type="checkbox" value="entertainment"> Entertainment</label>
+      <label><input type="checkbox" value="health"> Health</label>
+      <label><input type="checkbox" value="science"> Science</label>
+      <label><input type="checkbox" value="sports"> Sports</label>
+      <label><input type="checkbox" value="technology"> Technology</label>
+    </div>
+    <h3>Enter Keywords</h3>
+    <input type="text" id="news-keywords" placeholder="Enter keywords">
+    <button id="apply-news-filters">Apply Filters</button>
+  </div>
+  <div id="news">Loading news...</div>
+</div>
+
+
+      
     </div>
     <div><button id="dark-mode-toggle" class="toggle-button">🌙</button></div>
   </div>

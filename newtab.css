@@ -637,3 +637,113 @@ body.light-mode .daily-journaling-prompt .journal-entry-input::placeholder {
   background-color: #218838;
 }
 
+
+
+/* Styling for the filter icon */
+.filter-icon {
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 18px;
+}
+
+/* Styling for the news filters section */
+.news-filters {
+  padding: 15px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.news-filters h3 {
+  margin-top: 0;
+  font-size: 16px;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+}
+
+#news-keywords {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+#apply-news-filters {
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+#apply-news-filters:hover {
+  background-color: #0056b3;
+}
+
+
+
+
+/* Styling for the filter icon */
+.filter-icon {
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 18px;
+}
+
+/* Styling for the product hunt filters section */
+.product-hunt-filters {
+  padding: 15px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.product-hunt-filters h3 {
+  margin-top: 0;
+  font-size: 16px;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+}
+
+#product-hunt-time-frame, #product-hunt-upvotes {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+#apply-product-hunt-filters {
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+#apply-product-hunt-filters:hover {
+  background-color: #0056b3;
+}
