@@ -1,6 +1,6 @@
 # SaaS Inspiration Hub – A New Tab Chrome Extension
 
-![5](https://github.com/user-attachments/assets/8969177a-8756-492f-8ccf-5def1b6f8101)
+![SaaS inspiration hub - Description](https://github.com/user-attachments/assets/a86f913b-2cbf-4157-8587-ad278ecb95eb)
 
 This Chrome extension enhances your new tab experience by offering the following features. Our goal is to provide a central hub of inspiration, news, and innovation, helping you stay informed and motivated as you build and scale your business.
 
