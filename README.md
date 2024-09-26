@@ -2,15 +2,16 @@
 
 ![SaaS inspiration hub - Description](https://github.com/user-attachments/assets/a86f913b-2cbf-4157-8587-ad278ecb95eb)
 
-This Chrome extension enhances your new tab experience by offering the following features. Our goal is to provide a central hub of inspiration, news, and innovation, helping you stay informed and motivated as you build and scale your business.
+This Chrome extension enhances your new tab experience by offering a comprehensive suite of features aimed at SaaS founders, entrepreneurs, and tech enthusiasts. It serves as a central hub of inspiration, news, and innovation, helping you stay informed, motivated, and productive as you build and scale your business.
 
 ## Features
-- **Daily Motivational Quotes:** Display a random quote related to SaaS and entrepreneurship.
-- **Daily Journaling Prompts:** Generate a daily prompt tailored for SaaS founders and entrepreneurs.
-- **Journal Entry Management:** Save and edit journal entries with date, prompt, and answer.
-- **Product Hunt Launches:** Display the latest Product Hunt launches with caching.
-- **SaaS News:** Show the latest SaaS-related news articles with caching.
-- **Personalized Welcome:** Save and display a personalized welcome message.
+- Daily Motivational Quotes: Start your day with a handpicked quote related to SaaS and entrepreneurship.
+- Daily Journaling Prompts: Generate a daily prompt tailored for SaaS founders and entrepreneurs, and capture your thoughts and reflections.
+- Journal Entry Management: Save, edit, and view journal entries with associated prompts and responses, helping you track your entrepreneurial journey.
+- Product Hunt Launches: Stay updated with the latest Product Hunt launches. Customize your feed by selecting time frames (Daily, Weekly, Monthly, Yearly, All Time) and applying an upvote threshold.
+- SaaS News: Get the latest SaaS-related news articles, curated and updated every 4 hours to keep you informed of industry trends.
+- Quick Notes: Capture quick notes directly on your new tab for ideas, to-dos, or anything that needs to be remembered. Notes are saved locally in your browser.
+- Personalized Welcome: Save and display a personalized welcome message to make your new tab experience unique and motivating.
 
 ## Installation
 1. Clone or download the repository.
@@ -21,14 +22,17 @@ This Chrome extension enhances your new tab experience by offering the following
 ## Usage
 1. Open a new tab to view the extension.
 2. Save your nickname to get a personalized greeting.
-3. Write and save your journal entry.
+3. Write and save your journal entry or quick notes.
 4. View and edit past entries in the history section.
+5. Customize your Product Hunt feed with filters for time frame and upvotes.
 
 ## Code Highlights
-- `displayRandomJournalPrompt`: Displays and saves a random daily prompt.
-- `saveJournalEntry`: Saves the journal entry with date, prompt, and answer.
-- `editJournalEntry`: Edits only the answer of a journal entry.
-- `updateJournalHistory`: Shows the journal history.
+- displayRandomJournalPrompt: Displays and saves a random daily prompt.
+- saveJournalEntry: Saves the journal entry with date, prompt, and response.
+- editJournalEntry: Edits both the prompt and response of a journal entry.
+- updateJournalHistory: Shows the journal history with editing options.
+- fetchProductHuntLaunches: Fetches Product Hunt launches with options for time frame and upvote filtering.
+- displayProductHuntLaunches: Displays Product Hunt launches with customized styling and vote box design.
 
 ## Contribution
 Feel free to fork the repository and submit pull requests for improvements or new features.
