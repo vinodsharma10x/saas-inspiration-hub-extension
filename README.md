@@ -13,6 +13,9 @@ This Chrome extension enhances your new tab experience by offering a comprehensi
 - Quick Notes: Capture quick notes directly on your new tab for ideas, to-dos, or anything that needs to be remembered. Notes are saved locally in your browser.
 - Personalized Welcome: Save and display a personalized welcome message to make your new tab experience unique and motivating.
 
+## Interactive Demo
+- https://app.usehexus.com/flow/Creating_a_Product_Story__f98e1b83-41ab-4bb3-a1e4-36d66fa2d438?template=INTERACTIVE_DEMO
+
 ## Installation
 1. Clone or download the repository.
 2. Go to `chrome://extensions` in Chrome.
