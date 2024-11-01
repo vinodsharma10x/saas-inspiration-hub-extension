@@ -77,6 +77,35 @@
   <div id="product-hunt">Loading launches...</div>
 </div>
 
+<!-- Add this after the Product Hunt column and before the News column -->
+<div class="column monthly-product-hunt-column">
+  <h2>
+    Monthly Top Launches
+    <span id="monthly-product-hunt-filter-icon" class="filter-icon">⚙️</span>
+  </h2>
+  <h3>Top Products This Month</h3>
+  <!-- Hidden filter options -->
+  <div id="monthly-product-hunt-filters" class="product-hunt-filters" style="display: none;">
+    <h3>Select Time Frame</h3>
+    <select id="monthly-product-hunt-time-frame" class="time-frame-select">
+      <option value="daily">Daily</option>
+      <option value="weekly">This Week</option>
+      <option value="monthly" selected>This Month</option>
+      <option value="yearly">This Year</option>
+      <option value="all-time">All Time</option>
+    </select>
+    <h3>Minimum Upvotes</h3>
+    <input type="number" id="monthly-product-hunt-upvotes" placeholder="Minimum upvotes" min="0" value="0">
+    <h3>Show Media Content</h3>
+    <div class="checkbox-wrapper">
+      <input type="checkbox" id="monthly-product-hunt-show-media" checked> 
+      <label for="monthly-product-hunt-show-media">Show Images</label>
+    </div>
+    <button id="apply-monthly-product-hunt-filters" class="apply-filters">Apply Filters</button>
+  </div>
+  <div id="monthly-product-hunt">Loading launches...</div>
+</div>
+
 
 
       <!-- Column 3: SaaS News Section -->
