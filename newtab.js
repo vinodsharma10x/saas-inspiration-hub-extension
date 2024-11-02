@@ -673,3 +673,37 @@ async function fetchCombinedStartupNews() {
     throw error;
   }
 }
+
+function updateDateTime() {
+  const timeElement = document.getElementById('time');
+  const dateElement = document.getElementById('date');
+  
+  const now = new Date();
+  
+  // Format time (HH:MM)
+  timeElement.textContent = now.toLocaleTimeString('en-US', { 
+    hour: '2-digit', 
+    minute: '2-digit',
+    hour12: true 
+  });
+  
+  // Format date (Weekday, Month Day, Year)
+  dateElement.textContent = now.toLocaleDateString('en-US', { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+}
+
+// Update time every second
+setInterval(updateDateTime, 1000);
+
+// Initial update
+updateDateTime();
+
+// Hide social icons related code
+/* document.addEventListener('DOMContentLoaded', () => {
+  const moreOptions = document.querySelector('.more-options');
+  // ... rest of social icons code
+}); */
