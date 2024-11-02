@@ -14,7 +14,7 @@ body {
 
 body.light-mode {
   background-color: #ffffff;
-  color: #000000;
+  color: #333333;
 }
 
 body.dark-mode {
@@ -67,13 +67,8 @@ p {
 .container {
   width: 90%;
   max-width: 1400px;
- 
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  margin-top: 20px;
 }
 
 .welcome-section {
@@ -106,14 +101,17 @@ p {
 .content {
   display: flex;
   justify-content: space-between;
-  width: 100%;
-  gap: 20px;
+  gap: 10px;
+  margin-top: 20px;
 }
 
 .column {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  background-color: #2a2a2a;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 0 10px;
+  border: none;
+  box-shadow: none;
 }
 
 .product-hunt-column,
@@ -122,19 +120,18 @@ p {
   max-width: 32%;
   flex: 1;
   margin: 0 10px;
-  background-color: #2a2a2a;
-  border: 1px solid #444;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
   border-radius: 10px;
   padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .product-item, .news-item {
-  background-color: #2a2a2a;
-  border: 1px solid #3a3a3a;
+  background-color: #ffffff;
   border-radius: 8px;
-  margin-bottom: 15px;
-  padding: 15px;
-  transition: background-color 0.3s ease;
+  padding: 16px;
+  margin-bottom: 16px;
 }
 
 .product-item:hover, .news-item:hover {
@@ -644,11 +641,12 @@ body.light-mode .daily-journaling-prompt .journal-entry-input::placeholder {
 
 /* Styling for the product hunt filters section */
 .product-hunt-filters {
-  background-color: #2a2a2a;
-  border: 1px solid #444;
+  background-color: #ffffff;
+  border: 1px solid #e9ecef;
   border-radius: 5px;
   padding: 15px;
   margin-bottom: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .product-hunt-filters h3 {
@@ -662,10 +660,10 @@ body.light-mode .daily-journaling-prompt .journal-entry-input::placeholder {
 .product-hunt-filters input[type="number"] {
   width: 100%;
   padding: 8px;
-  background-color: #3a3a3a;
-  border: 1px solid #555;
+  background-color: #ffffff;
+  border: 1px solid #ced4da;
   border-radius: 4px;
-  color: #ffffff;
+  color: #495057;
   margin-bottom: 10px;
 }
 
@@ -955,3 +953,180 @@ body.light-mode .datetime-section {
 .social-icons img:hover {
   opacity: 1;
 } */
+
+/* Vote count styling */
+.vote-count {
+  display: inline-flex;
+  align-items: center;
+  background-color: rgba(0, 128, 0, 0.1); /* Light green background */
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+  font-weight: normal;
+  font-size: 0.9em;
+}
+
+.vote-count .arrow {
+  margin-left: 2px;
+  font-size: 1.1em;
+}
+
+/* Dark mode adjustments */
+body.dark-mode .vote-count {
+  color: #4CAF50; /* Material Design green */
+  background-color: rgba(76, 175, 80, 0.1);
+}
+
+body.dark-mode .vote-count .arrow {
+  color: #4CAF50;
+}
+
+/* Light mode adjustments */
+body.light-mode .vote-count {
+  color: #2E7D32; /* Darker green for better contrast */
+  background-color: rgba(46, 125, 50, 0.1);
+}
+
+body.light-mode .vote-count .arrow {
+  color: #2E7D32;
+}
+
+/* Column styling */
+.column {
+  border-radius: 8px;
+  padding: 20px;
+  margin: 0 10px;
+}
+
+/* Dark mode specific adjustments */
+body.dark-mode {
+  background-color: #1c1c1c;
+}
+
+body.dark-mode .column {
+  background-color: #2a2a2a;
+}
+
+body.dark-mode .product-item,
+body.dark-mode .news-item {
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  color: #e0e0e0;
+}
+
+/* Column headers in dark mode */
+body.dark-mode .column h2 {
+  color: #ffffff;
+  background-color: #2a2a2a;
+  padding: 20px;
+  margin: -20px -20px 20px -20px;
+  border-radius: 8px 8px 0 0;
+}
+
+/* News metadata in dark mode */
+body.dark-mode .news-metadata {
+  color: #888;
+}
+
+/* Links in dark mode */
+body.dark-mode .product-item a,
+body.dark-mode .news-item a {
+  color: #00b3ff;
+}
+
+/* Vote count styling for dark mode */
+body.dark-mode .vote-count {
+  color: #4CAF50;
+  background-color: rgba(76, 175, 80, 0.1);
+}
+
+body.dark-mode .vote-count .arrow {
+  color: #4CAF50;
+}
+
+/* Reset any existing column styles first */
+.product-hunt-column,
+.monthly-product-hunt-column,
+.news-column,
+.column {
+  background-color: #2a2a2a;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 0 10px;
+  border: none;
+  box-shadow: none;
+}
+
+/* Remove any inherited borders */
+body.dark-mode .product-hunt-column,
+body.dark-mode .monthly-product-hunt-column,
+body.dark-mode .news-column,
+body.dark-mode .column {
+  border: none !important;
+  box-shadow: none !important;
+  background-color: #2a2a2a;
+}
+
+/* Content styling */
+.content {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* Remove any outline/border from the column headers */
+.column h2 {
+  border: none;
+  background-color: #2a2a2a;
+  padding: 20px;
+  margin: -20px -20px 20px -20px;
+  border-radius: 8px 8px 0 0;
+}
+
+/* Light mode base styles */
+body.light-mode {
+  background-color: #ffffff;
+}
+
+/* Light mode column styling */
+body.light-mode .column {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+}
+
+/* Light mode column headers */
+body.light-mode .column h2 {
+  color: #000000;
+  background-color: #ffffff;
+  padding: 20px;
+  margin: -20px -20px 20px -20px;
+  border-radius: 8px 8px 0 0;
+  border-bottom: 1px solid #eaeaea;
+}
+
+/* Light mode items */
+body.light-mode .product-item,
+body.light-mode .news-item {
+  background-color: #ffffff;
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+/* Light mode text colors */
+body.light-mode .product-item h3,
+body.light-mode .news-item h3 {
+  color: #000000;
+}
+
+body.light-mode .product-item p,
+body.light-mode .news-item p {
+  color: #4a4a4a;
+}
+
+/* Light mode metadata */
+body.light-mode .news-metadata {
+  color: #666666;
+}

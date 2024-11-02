@@ -248,7 +248,12 @@ document.addEventListener('DOMContentLoaded', () => {
       productItem.innerHTML = `
         ${showMedia && post.node.thumbnail.url ? `<img src="${post.node.thumbnail.url}" alt="${post.node.name}" class="product-image">` : ''}
         <div>
-          <h3><a href="${post.node.url}" target="_blank">${post.node.name}</a> (${post.node.votesCount})</h3>
+          <h3>
+            <a href="${post.node.url}" target="_blank">${post.node.name}</a>
+            <span class="vote-count">
+              (${post.node.votesCount} 
+              <span class="arrow">↑</span>)
+            </span>
           <h4>${post.node.tagline}</h4>
           <p>${post.node.description}</p>
         </div>
@@ -417,7 +422,13 @@ document.addEventListener('DOMContentLoaded', () => {
       productItem.innerHTML = `
         ${showMedia && post.node.thumbnail.url ? `<img src="${post.node.thumbnail.url}" alt="${post.node.name}" class="product-image">` : ''}
         <div>
-          <h3><a href="${post.node.url}" target="_blank">${post.node.name}</a> (${post.node.votesCount})</h3>
+        <h3>
+            <a href="${post.node.url}" target="_blank">${post.node.name}</a>
+            <span class="vote-count">
+              (${post.node.votesCount} 
+              <span class="arrow">↑</span>)
+            </span>
+          </h3>
           <h4>${post.node.tagline}</h4>
           <p>${post.node.description}</p>
         </div>
@@ -701,13 +712,14 @@ async function fetchCombinedStartupNews() {
   }
 }
 
+// Time and date update function
 function updateDateTime() {
   const timeElement = document.getElementById('time');
   const dateElement = document.getElementById('date');
   
   const now = new Date();
   
-  // Format time (HH:MM)
+  // Format time (HH:MM PM/AM)
   timeElement.textContent = now.toLocaleTimeString('en-US', { 
     hour: '2-digit', 
     minute: '2-digit',
@@ -726,8 +738,10 @@ function updateDateTime() {
 // Update time every second
 setInterval(updateDateTime, 1000);
 
-// Initial update
-updateDateTime();
+// Initial update when page loads
+document.addEventListener('DOMContentLoaded', () => {
+  updateDateTime();
+});
 
 // Hide social icons related code
 /* document.addEventListener('DOMContentLoaded', () => {
