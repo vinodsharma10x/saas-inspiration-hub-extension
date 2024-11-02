@@ -248,14 +248,9 @@ document.addEventListener('DOMContentLoaded', () => {
       productItem.innerHTML = `
         ${showMedia && post.node.thumbnail.url ? `<img src="${post.node.thumbnail.url}" alt="${post.node.name}" class="product-image">` : ''}
         <div>
-          <h3><a href="${post.node.url}" target="_blank">${post.node.name}</a></h3>
-          <p>${post.node.tagline}</p>
+          <h3><a href="${post.node.url}" target="_blank">${post.node.name}</a> (${post.node.votesCount})</h3>
+          <h4>${post.node.tagline}</h4>
           <p>${post.node.description}</p>
-        </div>
-        <div class="product-votes">
-          <div class="vote-box">
-            <span class="vote-count">${post.node.votesCount} Votes</span>
-          </div>
         </div>
       `;
       productHuntContainer.appendChild(productItem);
@@ -422,14 +417,9 @@ document.addEventListener('DOMContentLoaded', () => {
       productItem.innerHTML = `
         ${showMedia && post.node.thumbnail.url ? `<img src="${post.node.thumbnail.url}" alt="${post.node.name}" class="product-image">` : ''}
         <div>
-          <h3><a href="${post.node.url}" target="_blank">${post.node.name}</a></h3>
-          <p>${post.node.tagline}</p>
+          <h3><a href="${post.node.url}" target="_blank">${post.node.name}</a> (${post.node.votesCount})</h3>
+          <h4>${post.node.tagline}</h4>
           <p>${post.node.description}</p>
-        </div>
-        <div class="product-votes">
-          <div class="vote-box">
-            <span class="vote-count">${post.node.votesCount} Votes</span>
-          </div>
         </div>
       `;
       monthlyProductHuntContainer.appendChild(productItem);
