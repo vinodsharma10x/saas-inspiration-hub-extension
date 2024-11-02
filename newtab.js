@@ -436,11 +436,45 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Function to update the Monthly Product Hunt heading based on time frame
+  function updateMonthlyProductHuntHeading(timeFrame) {
+    let headingText = "Monthly Top Launches";
+    switch (timeFrame) {
+      case 'daily':
+        headingText = "Today's Launches";
+        break;
+      case 'weekly':
+        headingText = "This Week's Launches";
+        break;
+      case 'monthly':
+        headingText = "This Month's Launches";
+        break;
+      case 'yearly':
+        headingText = "This Year's Launches";
+        break;
+      case 'all-time':
+        headingText = "All Time Launches";
+        break;
+    }
+
+    // Update the heading text and reattach the settings icon
+    const monthlyProductHuntHeading = document.querySelector('.monthly-product-hunt-column h2');
+    monthlyProductHuntHeading.innerHTML = `${headingText} <span id="monthly-product-hunt-filter-icon" class="filter-icon">⚙️</span>`;
+    
+    // Reattach the event listener for the filter icon
+    document.getElementById('monthly-product-hunt-filter-icon').addEventListener('click', () => {
+      monthlyProductHuntFilters.style.display = monthlyProductHuntFilters.style.display === 'none' ? 'block' : 'none';
+    });
+  }
+
   // Apply monthly filters button click handler
   applyMonthlyProductHuntFiltersButton.addEventListener('click', () => {
     const timeFrame = document.getElementById('monthly-product-hunt-time-frame').value;
     const upvoteThreshold = parseInt(document.getElementById('monthly-product-hunt-upvotes').value, 10) || 0;
     const showMedia = document.getElementById('monthly-product-hunt-show-media').checked;
+
+    // Update heading based on the selected time frame
+    updateMonthlyProductHuntHeading(timeFrame);
 
     // Save user selections in local storage
     chrome.storage.local.set({
@@ -468,6 +502,9 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('monthly-product-hunt-time-frame').value = savedTimeFrame;
       document.getElementById('monthly-product-hunt-upvotes').value = savedUpvoteThreshold;
       document.getElementById('monthly-product-hunt-show-media').checked = savedShowMedia;
+
+      // Update heading based on the saved time frame
+      updateMonthlyProductHuntHeading(savedTimeFrame);
 
       // Fetch monthly launches with saved filters
       fetchMonthlyProductHuntLaunches(savedTimeFrame, savedUpvoteThreshold, savedShowMedia);
