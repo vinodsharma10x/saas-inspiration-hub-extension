@@ -372,7 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const query = `{
-      posts(first: 20, order: VOTES${dateFilter}) {
+      posts(first: 10, order: VOTES${dateFilter}) {
         edges {
           node {
             id
