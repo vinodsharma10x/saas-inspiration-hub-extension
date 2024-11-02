@@ -16,62 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-  const notesArea = document.getElementById('notes-area');
-  notesArea.value = localStorage.getItem('notes') || '';
 
-  notesArea.addEventListener('input', () => {
-    localStorage.setItem('notes', notesArea.value);
-  });
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-  const bookmarkIcons = document.getElementById('bookmark-icons');
-  const bookmarkInputSection = document.querySelector('.bookmark-input');
-  const showInputsButton = document.getElementById('show-inputs');
-  const bookmarkList = JSON.parse(localStorage.getItem('bookmarks')) || [];
-
-  // Function to display icons as clickable links
-  function displayIcons() {
-    bookmarkIcons.innerHTML = bookmarkList.map((bookmark) => {
-      const faviconUrl = `https://www.google.com/s2/favicons?domain=${new URL(bookmark.url).hostname}`;
-      return `
-        <a href="${bookmark.url}" title="${bookmark.name}">
-          <img src="${faviconUrl}" alt="${bookmark.name}" />
-        </a>
-      `;
-    }).join('');
-
-    // Append the "+" button to the end of the icons
-    bookmarkIcons.appendChild(showInputsButton);
-  }
-
-  // Show input fields on "+" button click
-  showInputsButton.addEventListener('click', () => {
-    bookmarkInputSection.style.display = bookmarkInputSection.style.display === 'none' ? 'flex' : 'none';
-  });
-
-  document.getElementById('add-bookmark').addEventListener('click', () => {
-    const name = document.getElementById('bookmark-name').value;
-    const url = document.getElementById('bookmark-url').value;
-
-    if (name && url) {
-      bookmarkList.push({ name, url });
-      localStorage.setItem('bookmarks', JSON.stringify(bookmarkList));
-      displayIcons();
-
-      // Clear the input fields
-      document.getElementById('bookmark-name').value = '';
-      document.getElementById('bookmark-url').value = '';
-      
-      // Hide the input fields after adding
-      bookmarkInputSection.style.display = 'none';
-    }
-  });
-
-  // Initial display of icons
-  displayIcons();
-});
 
 document.addEventListener('DOMContentLoaded', () => {
   const filterIcon = document.getElementById('filter-icon');
