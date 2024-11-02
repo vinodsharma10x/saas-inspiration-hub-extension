@@ -84,89 +84,113 @@ document.addEventListener('DOMContentLoaded', () => {
     newsFilters.style.display = newsFilters.style.display === 'none' ? 'block' : 'none';
   });
 
-  // Function to fetch SaaS news based on user-selected filters
-  function fetchSaaSNews(categories, keywords) {
-    const apiKey = 'ad4f0ec2b8ba51751b6a3353b346b939'; // Replace with your Mediastack API key
-    const url = `http://api.mediastack.com/v1/news?access_key=${apiKey}&categories=${categories}&keywords=${keywords}&languages=en&limit=5`;
+  // Function to fetch Hacker News stories
+  async function fetchHackerNews(storyType = 'top', limit = 10) {
+    try {
+      // First fetch the story IDs
+      const response = await fetch(`https://hacker-news.firebaseio.com/v0/${storyType}stories.json`);
+      const storyIds = await response.json();
+      
+      // Take only the number of stories we want
+      const limitedStoryIds = storyIds.slice(0, limit);
+      
+      // Fetch all story details in parallel
+      const storyPromises = limitedStoryIds.map(id =>
+        fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`)
+          .then(response => response.json())
+      );
+      
+      const stories = await Promise.all(storyPromises);
+      displayNews(stories);
+    } catch (error) {
+      console.error('Error fetching Hacker News:', error);
+      document.getElementById('news').innerHTML = 'Failed to load news.';
+    }
+  }
 
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        if (data.data) {
-          chrome.storage.local.set({
-            saasNewsData: data.data,
-            saasNewsCacheTime: Date.now()
-          });
-          displayNews(data.data);
-        } else {
-          newsContainer.innerText = 'No news found.';
-        }
-      })
-      .catch(error => {
-        newsContainer.innerText = 'Failed to load news.';
-        console.error('Error fetching news:', error);
-      });
+  // Function to display the news
+  function displayNews(stories) {
+    const newsContainer = document.getElementById('news');
+    newsContainer.innerHTML = '';
+
+    stories.forEach(story => {
+      if (!story) return; // Skip if story is null
+
+      const newsItem = document.createElement('div');
+      newsItem.classList.add('news-item');
+      
+      // Calculate time ago
+      const timeAgo = calculateTimeAgo(story.time * 1000); // Convert Unix timestamp to milliseconds
+      
+      newsItem.innerHTML = `
+        <div class="news-content">
+          <h3>
+            <a href="${story.url || `https://news.ycombinator.com/item?id=${story.id}`}" target="_blank">
+              ${story.title}
+            </a>
+          </h3>
+          <div class="news-metadata">
+            <span>${story.score} points</span>
+            <span>by ${story.by}</span>
+            <span>${timeAgo}</span>
+            <a href="https://news.ycombinator.com/item?id=${story.id}" target="_blank">
+              ${story.descendants || 0} comments
+            </a>
+          </div>
+        </div>
+      `;
+      newsContainer.appendChild(newsItem);
+    });
+  }
+
+  // Helper function to calculate time ago
+  function calculateTimeAgo(timestamp) {
+    const seconds = Math.floor((new Date() - timestamp) / 1000);
+
+    let interval = seconds / 31536000; // years
+    if (interval > 1) return Math.floor(interval) + ' years ago';
+    
+    interval = seconds / 2592000; // months
+    if (interval > 1) return Math.floor(interval) + ' months ago';
+    
+    interval = seconds / 86400; // days
+    if (interval > 1) return Math.floor(interval) + ' days ago';
+    
+    interval = seconds / 3600; // hours
+    if (interval > 1) return Math.floor(interval) + ' hours ago';
+    
+    interval = seconds / 60; // minutes
+    if (interval > 1) return Math.floor(interval) + ' minutes ago';
+    
+    return Math.floor(seconds) + ' seconds ago';
   }
 
   // Apply filters and fetch news based on user input
   applyNewsFiltersButton.addEventListener('click', () => {
-    const selectedCategories = Array.from(document.querySelectorAll('.checkbox-group input:checked'))
-      .map(checkbox => checkbox.value)
-      .join(',');
-
-    const keywords = document.getElementById('news-keywords').value.trim();
-
-    // Save user selections in local storage
+    const storyType = document.getElementById('news-story-type').value;
+    const limit = parseInt(document.getElementById('news-limit').value, 10);
+    
+    // Save preferences
     chrome.storage.local.set({
-      selectedCategories: selectedCategories,
-      selectedKeywords: keywords
+      selectedStoryType: storyType,
+      selectedLimit: limit
     });
 
-    // Fetch news with selected filters
-    fetchSaaSNews(selectedCategories, keywords);
-
-    // Hide filters after applying
+    fetchHackerNews(storyType, limit);
     newsFilters.style.display = 'none';
   });
 
-  // Load saved user selections and apply filters on page load
-  chrome.storage.local.get(['selectedCategories', 'selectedKeywords'], function(result) {
-    const savedCategories = result.selectedCategories || 'business'; // Default to 'business'
-    const savedKeywords = result.selectedKeywords || 'saas'; // Default to 'saas'
+  // Load saved preferences and fetch news
+  chrome.storage.local.get(['selectedStoryType', 'selectedLimit'], function(result) {
+    const savedStoryType = result.selectedStoryType || 'top';
+    const savedLimit = result.selectedLimit || 10;
 
-    // Check the checkboxes based on saved categories
-    savedCategories.split(',').forEach(category => {
-      const checkbox = document.querySelector(`.checkbox-group input[value="${category}"]`);
-      if (checkbox) checkbox.checked = true;
-    });
+    document.getElementById('news-story-type').value = savedStoryType;
+    document.getElementById('news-limit').value = savedLimit;
 
-    // Set the keywords input value
-    document.getElementById('news-keywords').value = savedKeywords;
-
-    // Fetch news with saved filters
-    fetchSaaSNews(savedCategories, savedKeywords);
+    fetchHackerNews(savedStoryType, savedLimit);
   });
 });
-
-// Function to display SaaS news articles
-function displayNews(articles) {
-  const newsContainer = document.getElementById('news');
-  newsContainer.innerHTML = '';
-
-  articles.forEach(article => {
-    const newsItem = document.createElement('div');
-    newsItem.classList.add('news-item');
-    newsItem.innerHTML = `
-      ${article.image ? `<img src="${article.image}" alt="${article.title}" class="news-image">` : ''}
-      <div>
-        <h3><a href="${article.url}" target="_blank">${article.title}</a></h3>
-        <p>${article.description || 'No description available.'}</p>
-        <small>Published on: ${new Date(article.published_at).toLocaleDateString()}</small>
-      </div>
-    `;
-    newsContainer.appendChild(newsItem);
-  });
-}
 
 document.addEventListener('DOMContentLoaded', () => {
   const filterIcon = document.getElementById('product-hunt-filter-icon');
