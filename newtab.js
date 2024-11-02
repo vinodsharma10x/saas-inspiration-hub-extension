@@ -267,19 +267,19 @@ document.addEventListener('DOMContentLoaded', () => {
     let headingText = "Product Hunt Launches";
     switch (timeFrame) {
       case 'daily':
-        headingText = "Today's Product Hunt Launches";
+        headingText = "Today's Launches";
         break;
       case 'weekly':
-        headingText = "This Week's Product Hunt Launches";
+        headingText = "This Week's Launches";
         break;
       case 'monthly':
-        headingText = "This Month's Product Hunt Launches";
+        headingText = "This Month's Launches";
         break;
       case 'yearly':
-        headingText = "This Year's Product Hunt Launches";
+        headingText = "This Year's Launches";
         break;
       case 'all-time':
-        headingText = "All Time Product Hunt Launches";
+        headingText = "All Time Launches";
         break;
     }
 
