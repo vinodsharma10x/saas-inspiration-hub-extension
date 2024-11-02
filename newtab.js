@@ -717,6 +717,11 @@ function updateDateTime() {
   const timeElement = document.getElementById('time');
   const dateElement = document.getElementById('date');
   
+  if (!timeElement || !dateElement) {
+    console.error('Time or date element not found!');
+    return;
+  }
+  
   const now = new Date();
   
   // Format time (HH:MM PM/AM)
@@ -735,10 +740,13 @@ function updateDateTime() {
   });
 }
 
-// Update time every second
+// Initialize immediately
+updateDateTime();
+
+// Then set up the interval
 setInterval(updateDateTime, 1000);
 
-// Initial update when page loads
+// Also set up the DOMContentLoaded listener as a backup
 document.addEventListener('DOMContentLoaded', () => {
   updateDateTime();
 });

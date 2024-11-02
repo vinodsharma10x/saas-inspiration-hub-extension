@@ -910,29 +910,47 @@ body.light-mode .description {
 
 .datetime-section {
   text-align: center;
-  padding: 20px;
-  margin-bottom: 20px;
+  margin: 40px auto 60px; /* Increased margin for better spacing */
+  padding: 0;
+  background-color: transparent;
+  position: relative;
+  z-index: 1;
 }
 
 #time {
-  font-size: 3.5rem;
-  font-weight: 500;
-  color: #fff;
-  margin-bottom: 5px;
+  font-size: 5rem; /* Slightly larger */
+  font-weight: 400; /* Lighter weight for elegance */
+  margin-bottom: 8px;
+  letter-spacing: -2px; /* Tighter letter spacing */
+  display: block;
+  line-height: 1;
+  font-family: 'Inter', sans-serif;
 }
 
 #date {
-  font-size: 1.2rem;
-  color: #888;
+  font-size: 1.1rem;
+  font-weight: 400;
+  opacity: 0.7; /* Subtle transparency */
+  display: block;
+  font-family: 'Inter', sans-serif;
 }
 
 /* Dark mode adjustments */
-body.dark-mode .datetime-section {
-  color: #fff;
+body.dark-mode #time {
+  color: #ffffff;
 }
 
-body.light-mode .datetime-section {
-  color: #333;
+body.dark-mode #date {
+  color: #999;
+}
+
+/* Light mode adjustments */
+body.light-mode #time {
+  color: #1a1a1a;
+}
+
+body.light-mode #date {
+  color: #666;
 }
 
 /* Hide social icons styling */
