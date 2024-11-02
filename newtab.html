@@ -95,20 +95,53 @@
       <!-- Column 3: SaaS News Section -->
       <div class="column news-column">
         <h2>
-          Hacker News
+          Trending News
           <span id="filter-icon" class="filter-icon">⚙️</span>
         </h2>
         <div id="news-filters" class="product-hunt-filters" style="display: none;">
-          <h3>Story Type</h3>
-          <select id="news-story-type" class="time-frame-select">
-            <option value="top">Top Stories</option>
-            <option value="best">Best Stories</option>
-            <option value="new">New Stories</option>
-            <option value="show">Show HN</option>
-            <option value="ask">Ask HN</option>
+          <h3>Select News Source</h3>
+          <select id="news-source" class="time-frame-select">
+            <option value="hackernews">Hacker News</option>
+            <option value="googlenews">Google News</option>
+            <option value="techcrunch">TechCrunch</option>
           </select>
-          <h3>Number of Stories</h3>
-          <input type="number" id="news-limit" min="1" max="30" value="10">
+
+          <!-- Hacker News Options -->
+          <div id="hackernews-options" class="source-options">
+            <h3>Story Type</h3>
+            <select id="news-story-type" class="time-frame-select">
+              <option value="top">Top Stories</option>
+              <option value="best">Best Stories</option>
+              <option value="new">New Stories</option>
+              <option value="show">Show HN</option>
+              <option value="ask">Ask HN</option>
+            </select>
+            <h3>Number of Stories</h3>
+            <input type="number" id="news-limit" min="1" max="30" value="10">
+          </div>
+
+          <!-- Google News Options -->
+          <div id="googlenews-options" class="source-options" style="display: none;">
+            <h3>Category</h3>
+            <select id="google-category" class="time-frame-select">
+              <option value="entrepreneurship">Entrepreneurship</option>
+              <option value="jobs">Jobs</option>
+              <option value="personal-finance">Personal Finance</option>
+              <option value="technology">Technology</option>
+            </select>
+          </div>
+
+          <!-- TechCrunch Options -->
+          <div id="techcrunch-options" class="source-options" style="display: none;">
+            <h3>Category</h3>
+            <select id="techcrunch-category" class="time-frame-select">
+              <option value="startups">Startups</option>
+              <option value="venture">Venture</option>
+              <option value="security">Security</option>
+              <option value="apps">Apps</option>
+            </select>
+          </div>
+
           <button id="apply-news-filters" class="apply-filters">Apply Filters</button>
         </div>
         <div id="news">Loading stories...</div>

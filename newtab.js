@@ -76,119 +76,83 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
   const filterIcon = document.getElementById('filter-icon');
   const newsFilters = document.getElementById('news-filters');
+  const newsSource = document.getElementById('news-source');
   const applyNewsFiltersButton = document.getElementById('apply-news-filters');
-  const newsContainer = document.getElementById('news');
 
-  // Show or hide filters section on icon click
+  // Show/hide source-specific options
+  newsSource.addEventListener('change', () => {
+    document.querySelectorAll('.source-options').forEach(el => el.style.display = 'none');
+    document.getElementById(`${newsSource.value}-options`).style.display = 'block';
+  });
+
+  // Show/hide filters
   filterIcon.addEventListener('click', () => {
     newsFilters.style.display = newsFilters.style.display === 'none' ? 'block' : 'none';
   });
 
-  // Function to fetch Hacker News stories
-  async function fetchHackerNews(storyType = 'top', limit = 10) {
+  // Apply filters
+  applyNewsFiltersButton.addEventListener('click', async () => {
+    const source = newsSource.value;
+    let options = {};
+
+    switch(source) {
+      case 'hackernews':
+        options = {
+          storyType: document.getElementById('news-story-type').value,
+          limit: parseInt(document.getElementById('news-limit').value, 10)
+        };
+        break;
+      case 'googlenews':
+        options = {
+          category: document.getElementById('google-category').value
+        };
+        break;
+      case 'techcrunch':
+        options = {
+          category: document.getElementById('techcrunch-category').value
+        };
+        break;
+    }
+
     try {
-      // First fetch the story IDs
-      const response = await fetch(`https://hacker-news.firebaseio.com/v0/${storyType}stories.json`);
-      const storyIds = await response.json();
-      
-      // Take only the number of stories we want
-      const limitedStoryIds = storyIds.slice(0, limit);
-      
-      // Fetch all story details in parallel
-      const storyPromises = limitedStoryIds.map(id =>
-        fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`)
-          .then(response => response.json())
-      );
-      
-      const stories = await Promise.all(storyPromises);
-      displayNews(stories);
+      const articles = await fetchNews(source, options);
+      displayNews(articles);
+      newsFilters.style.display = 'none';
+
+      // Save preferences
+      chrome.storage.local.set({
+        selectedNewsSource: source,
+        newsOptions: options
+      });
     } catch (error) {
-      console.error('Error fetching Hacker News:', error);
       document.getElementById('news').innerHTML = 'Failed to load news.';
     }
-  }
-
-  // Function to display the news
-  function displayNews(stories) {
-    const newsContainer = document.getElementById('news');
-    newsContainer.innerHTML = '';
-
-    stories.forEach(story => {
-      if (!story) return; // Skip if story is null
-
-      const newsItem = document.createElement('div');
-      newsItem.classList.add('news-item');
-      
-      // Calculate time ago
-      const timeAgo = calculateTimeAgo(story.time * 1000); // Convert Unix timestamp to milliseconds
-      
-      newsItem.innerHTML = `
-        <div class="news-content">
-          <h3>
-            <a href="${story.url || `https://news.ycombinator.com/item?id=${story.id}`}" target="_blank">
-              ${story.title}
-            </a>
-          </h3>
-          <div class="news-metadata">
-            <span>${story.score} points</span>
-            <span>by ${story.by}</span>
-            <span>${timeAgo}</span>
-            <a href="https://news.ycombinator.com/item?id=${story.id}" target="_blank">
-              ${story.descendants || 0} comments
-            </a>
-          </div>
-        </div>
-      `;
-      newsContainer.appendChild(newsItem);
-    });
-  }
-
-  // Helper function to calculate time ago
-  function calculateTimeAgo(timestamp) {
-    const seconds = Math.floor((new Date() - timestamp) / 1000);
-
-    let interval = seconds / 31536000; // years
-    if (interval > 1) return Math.floor(interval) + ' years ago';
-    
-    interval = seconds / 2592000; // months
-    if (interval > 1) return Math.floor(interval) + ' months ago';
-    
-    interval = seconds / 86400; // days
-    if (interval > 1) return Math.floor(interval) + ' days ago';
-    
-    interval = seconds / 3600; // hours
-    if (interval > 1) return Math.floor(interval) + ' hours ago';
-    
-    interval = seconds / 60; // minutes
-    if (interval > 1) return Math.floor(interval) + ' minutes ago';
-    
-    return Math.floor(seconds) + ' seconds ago';
-  }
-
-  // Apply filters and fetch news based on user input
-  applyNewsFiltersButton.addEventListener('click', () => {
-    const storyType = document.getElementById('news-story-type').value;
-    const limit = parseInt(document.getElementById('news-limit').value, 10);
-    
-    // Save preferences
-    chrome.storage.local.set({
-      selectedStoryType: storyType,
-      selectedLimit: limit
-    });
-
-    fetchHackerNews(storyType, limit);
-    newsFilters.style.display = 'none';
   });
 
   // Load saved preferences and fetch news
-  chrome.storage.local.get(['selectedStoryType', 'selectedLimit'], function(result) {
-    const savedStoryType = result.selectedStoryType || 'top';
-    const savedLimit = result.selectedLimit || 10;
+  chrome.storage.local.get(['selectedNewsSource', 'newsOptions'], function(result) {
+    const savedSource = result.selectedNewsSource || 'hackernews';
+    const savedOptions = result.newsOptions || { storyType: 'top', limit: 10 };
 
-    document.getElementById('news-story-type').value = savedStoryType;
-    document.getElementById('news-limit').value = savedLimit;
+    newsSource.value = savedSource;
+    newsSource.dispatchEvent(new Event('change'));
 
-    fetchHackerNews(savedStoryType, savedLimit);
+    // Set saved options based on source
+    if (savedSource === 'hackernews') {
+      document.getElementById('news-story-type').value = savedOptions.storyType;
+      document.getElementById('news-limit').value = savedOptions.limit;
+    } else if (savedSource === 'googlenews') {
+      document.getElementById('google-category').value = savedOptions.category;
+    } else if (savedSource === 'techcrunch') {
+      document.getElementById('techcrunch-category').value = savedOptions.category;
+    }
+
+    // Fetch initial news
+    fetchNews(savedSource, savedOptions)
+      .then(displayNews)
+      .catch(error => {
+        document.getElementById('news').innerHTML = 'Failed to load news.';
+      });
   });
 });
 
@@ -510,3 +474,202 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   );
 });
+
+// News fetching functions
+async function fetchNews(source, options) {
+  const newsContainer = document.getElementById('news');
+  newsContainer.innerHTML = 'Loading news...';
+
+  try {
+    let articles;
+    switch(source) {
+      case 'hackernews':
+        articles = await fetchHackerNews(options.storyType, options.limit);
+        break;
+      case 'googlenews':
+        articles = await fetchGoogleNews(options.category);
+        break;
+      case 'techcrunch':
+        articles = await fetchTechCrunchNews(options.category);
+        break;
+      default:
+        throw new Error('Invalid news source');
+    }
+    return articles;
+  } catch (error) {
+    console.error('Error fetching news:', error);
+    newsContainer.innerHTML = `Error loading news: ${error.message}`;
+    throw error;
+  }
+}
+
+// Existing Hacker News function with slight modifications
+async function fetchHackerNews(storyType = 'top', limit = 10) {
+  try {
+    const response = await fetch(`https://hacker-news.firebaseio.com/v0/${storyType}stories.json`);
+    const storyIds = await response.json();
+    const limitedStoryIds = storyIds.slice(0, limit);
+    
+    const storyPromises = limitedStoryIds.map(id =>
+      fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`)
+        .then(response => response.json())
+    );
+    
+    const stories = await Promise.all(storyPromises);
+    return stories.map(story => ({
+      title: story.title,
+      url: story.url || `https://news.ycombinator.com/item?id=${story.id}`,
+      source: 'Hacker News',
+      publishedAt: story.time * 1000,
+      author: story.by,
+      score: story.score,
+      comments: story.descendants || 0
+    }));
+  } catch (error) {
+    console.error('Error fetching Hacker News:', error);
+    throw error;
+  }
+}
+
+async function fetchGoogleNews(category) {
+  try {
+    // Using RSS2JSON service to handle CORS and convert RSS to JSON
+    const rssToJsonApi = 'https://api.rss2json.com/v1/api.json';
+    const googleNewsRss = `https://news.google.com/rss/search?q=${category}&hl=en-US&gl=US&ceid=US:en`;
+    
+    const response = await fetch(`${rssToJsonApi}?rss_url=${encodeURIComponent(googleNewsRss)}`);
+    const data = await response.json();
+    
+    if (data.status !== 'ok') {
+      throw new Error('Failed to fetch Google News');
+    }
+
+    return data.items.slice(0, 10).map(item => ({
+      title: item.title,
+      url: item.link,
+      source: 'Google News',
+      publishedAt: new Date(item.pubDate).getTime(),
+      author: item.author || 'Google News',
+      description: item.description
+    }));
+  } catch (error) {
+    console.error('Error fetching Google News:', error);
+    throw error;
+  }
+}
+
+async function fetchTechCrunchNews(category = 'startups') {
+  try {
+    // Using RSS2JSON service (same as Google News)
+    const rssToJsonApi = 'https://api.rss2json.com/v1/api.json';
+    const techCrunchRss = `https://techcrunch.com/category/${category}/feed/`;
+    
+    const response = await fetch(`${rssToJsonApi}?rss_url=${encodeURIComponent(techCrunchRss)}`);
+    const data = await response.json();
+    
+    if (data.status !== 'ok') {
+      throw new Error('Failed to fetch TechCrunch news');
+    }
+
+    return data.items.slice(0, 10).map(item => ({
+      title: item.title,
+      url: item.link,
+      source: 'TechCrunch',
+      publishedAt: new Date(item.pubDate).getTime(),
+      author: item.author,
+      description: item.description.replace(/<[^>]*>/g, '').substring(0, 200) + '...',
+      image: item.thumbnail
+    }));
+  } catch (error) {
+    console.error('Error fetching TechCrunch news:', error);
+    throw error;
+  }
+}
+
+// Display news function
+function displayNews(articles) {
+  const newsContainer = document.getElementById('news');
+  newsContainer.innerHTML = '';
+
+  if (!articles || articles.length === 0) {
+    newsContainer.innerHTML = 'No news articles found.';
+    return;
+  }
+
+  articles.forEach(article => {
+    if (!article.title || !article.url) return; // Skip invalid articles
+
+    const newsItem = document.createElement('div');
+    newsItem.classList.add('news-item');
+    
+    const timeAgo = calculateTimeAgo(article.publishedAt);
+    
+    // Clean up description if it exists (remove HTML tags)
+    const cleanDescription = article.description ? 
+      article.description.replace(/<[^>]*>/g, '').substring(0, 200) + '...' : '';
+    
+    newsItem.innerHTML = `
+      <div class="news-content">
+        <h3>
+          <a href="${article.url}" target="_blank" rel="noopener noreferrer">
+            ${article.title}
+          </a>
+        </h3>
+        <div class="news-metadata">
+          ${article.source ? `<span>${article.source}</span>` : ''}
+          ${article.author ? `<span>by ${article.author}</span>` : ''}
+          <span>${timeAgo}</span>
+          ${article.score ? `<span>${article.score} points</span>` : ''}
+          ${article.comments ? `
+            <a href="https://news.ycombinator.com/item?id=${article.id}" target="_blank">
+              ${article.comments} comments
+            </a>
+          ` : ''}
+        </div>
+        ${cleanDescription ? `<p class="description">${cleanDescription}</p>` : ''}
+      </div>
+    `;
+    newsContainer.appendChild(newsItem);
+  });
+}
+
+// Helper function to calculate time ago
+function calculateTimeAgo(timestamp) {
+  const seconds = Math.floor((new Date() - timestamp) / 1000);
+
+  let interval = seconds / 31536000; // years
+  if (interval > 1) return Math.floor(interval) + ' years ago';
+  
+  interval = seconds / 2592000; // months
+  if (interval > 1) return Math.floor(interval) + ' months ago';
+  
+  interval = seconds / 86400; // days
+  if (interval > 1) return Math.floor(interval) + ' days ago';
+  
+  interval = seconds / 3600; // hours
+  if (interval > 1) return Math.floor(interval) + ' hours ago';
+  
+  interval = seconds / 60; // minutes
+  if (interval > 1) return Math.floor(interval) + ' minutes ago';
+  
+  return Math.floor(seconds) + ' seconds ago';
+}
+
+async function fetchCombinedStartupNews() {
+  try {
+    // Fetch from multiple sources in parallel
+    const [hackerNews, techCrunch] = await Promise.all([
+      fetchHackerNews('top', 5),
+      fetchTechCrunchNews()
+    ]);
+
+    // Combine and sort by date
+    const combined = [...hackerNews, ...techCrunch]
+      .sort((a, b) => b.publishedAt - a.publishedAt);
+
+    return combined.slice(0, 10); // Return top 10 most recent
+  } catch (error) {
+    console.error('Error fetching combined news:', error);
+    throw error;
+  }
+}

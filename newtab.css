@@ -914,3 +914,21 @@ body.light-mode .news-metadata {
 body.light-mode .news-metadata a {
   color: #666;
 }
+
+.source-options {
+  margin-top: 15px;
+}
+
+.description {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #888;
+}
+
+body.light-mode .description {
+  color: #666;
+}
+
+.news-source-selector {
+  margin-bottom: 15px;
+}
